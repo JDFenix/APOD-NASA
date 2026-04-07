@@ -1,3 +1,3 @@
 export type HomeStackParamList ={
-    Home: Record<string, never>
+    HomeScreen: Record<string, never>
 }

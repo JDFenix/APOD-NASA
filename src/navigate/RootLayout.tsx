@@ -6,7 +6,7 @@ const Stack = createNativeStackNavigator<RootLayoutStackParamList>();
 
 export default function RootLayout() {
     return (
-        <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false, animation: "slide_from_bottom", animationDuration: 300 }}>
             <Stack.Screen name="Main" component={TabNavigator} />
         </Stack.Navigator>
     )
