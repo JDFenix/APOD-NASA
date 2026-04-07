@@ -1,7 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import TabNavigator from "./TabNavigator";
+import TabNavigator from "@src/navigate/TabNavigator";
+import { RootLayoutStackParamList } from "@/src/navigate/types/RootLayout.types";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootLayoutStackParamList>();
 
 export default function RootLayout() {
     return (
