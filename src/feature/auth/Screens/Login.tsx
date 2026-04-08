@@ -5,9 +5,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import useLogin from "../hook/useLogin";
+import useAnimationButton from "@/src/animations/useAnimationButton";
+import Animated from "react-native-reanimated";
 
 type LoginNavigationProp = BottomTabNavigationProp<TabNavigatorStackParamList, "Auth">
 
@@ -15,6 +17,8 @@ export default function Login() {
 
     const { setEmail, setPassword, email, password, login, loading, message, error } = useLogin()
     const [showPassword, setShowPassword] = useState(false);
+
+    const { onPressIn, onPressOut, stylesButtonAnimation } = useAnimationButton()
 
     const nav = useNavigation<LoginNavigationProp>()
 
@@ -38,7 +42,7 @@ export default function Login() {
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ flexGrow: 1, paddingBottom: verticalScale(20) }}
                 >
-                    
+
                     <View style={styles.backgroundGlowTop} />
 
                     <View style={{ marginTop: verticalScale(40), marginBottom: verticalScale(8) }}>
@@ -50,70 +54,74 @@ export default function Login() {
                         <View style={styles.container}>
 
 
-                        <View style={{ marginBottom: verticalScale(30) }}>
-                            <TextCustom type="Tittle">Iniciar Sesión</TextCustom>
-                            <TextCustom type="Subtittle">Bienvenido a APOD, tu ventana diaria al universo. Inicia sesión para descubrir la imagen astronómica de hoy.</TextCustom>
-                        </View>
+                            <View style={{ marginBottom: verticalScale(30) }}>
+                                <TextCustom type="Tittle">Iniciar Sesión</TextCustom>
+                                <TextCustom type="Subtittle">Bienvenido a APOD, tu ventana diaria al universo. Inicia sesión para descubrir la imagen astronómica de hoy.</TextCustom>
+                            </View>
 
-                    <View style={styles.inputBlock}>
-                        <TextCustom type="Label">Correo:</TextCustom>
-                        <TextInput
-                            onChangeText={(txt) => setEmail(txt)}
-                            value={email}
-                            placeholder="astronaut@nasa.mx"
-                            placeholderTextColor="#7E8CA8"
-                            keyboardType="email-address"
-                            autoCapitalize="none"
-                            returnKeyType="next"
-                            style={styles.input}
-                        />
-                    </View>
-
-                    <View style={styles.inputBlock}>
-                        <TextCustom type="Label">Contraseña:</TextCustom>
-                        <View style={{position: "relative"}}>
-                            <TextInput
-                                onChangeText={(txt) => setPassword(txt)}
-                                value={password}
-                                placeholder="**********"
-                                placeholderTextColor="#7E8CA8"
-                                secureTextEntry={!showPassword}
-                                returnKeyType="done"
-                                onSubmitEditing={handleLogin}
-                                style={styles.input}
-                            />
-                            <TouchableOpacity
-                                onPress={() => setShowPassword((show) => !show)}
-                                style={{ position: "absolute", right: scale(12), top: verticalScale(11), alignItems: "center", marginTop: verticalScale(5) }}
-                            >
-                                <Ionicons
-                                    name={showPassword ? "eye-off-outline" : "eye-outline"}
-                                    size={moderateScale(19, 0.4)}
-                                    color="#EEF3FF"
+                            <View style={styles.inputBlock}>
+                                <TextCustom type="Label">Correo:</TextCustom>
+                                <TextInput
+                                    onChangeText={(txt) => setEmail(txt)}
+                                    value={email}
+                                    placeholder="astronaut@nasa.mx"
+                                    placeholderTextColor="#7E8CA8"
+                                    keyboardType="email-address"
+                                    autoCapitalize="none"
+                                    returnKeyType="next"
+                                    style={styles.input}
                                 />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                            </View>
+
+                            <View style={styles.inputBlock}>
+                                <TextCustom type="Label">Contraseña:</TextCustom>
+                                <View style={{ position: "relative" }}>
+                                    <TextInput
+                                        onChangeText={(txt) => setPassword(txt)}
+                                        value={password}
+                                        placeholder="**********"
+                                        placeholderTextColor="#7E8CA8"
+                                        secureTextEntry={!showPassword}
+                                        returnKeyType="done"
+                                        onSubmitEditing={handleLogin}
+                                        style={styles.input}
+                                    />
+                                    <TouchableOpacity
+                                        onPress={() => setShowPassword((show) => !show)}
+                                        style={{ position: "absolute", right: scale(12), top: verticalScale(11), alignItems: "center", marginTop: verticalScale(5) }}
+                                    >
+                                        <Ionicons
+                                            name={showPassword ? "eye-off-outline" : "eye-outline"}
+                                            size={moderateScale(19, 0.4)}
+                                            color="#EEF3FF"
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
 
 
-                        <View style={{ minHeight: verticalScale(30) }}>
-                            {message && (
-                                <TextCustom style={{ textAlign: "center" }} type={error ? "Error" : "Success"} >{message ?? ""}</TextCustom>
-                            )}
-                        </View>
+                            <View style={{ minHeight: verticalScale(30) }}>
+                                {message && (
+                                    <TextCustom style={{ textAlign: "center" }} type={error ? "Error" : "Success"} >{message ?? ""}</TextCustom>
+                                )}
+                            </View>
 
 
-                        <TouchableOpacity
-                            disabled={loading ? true : false}
-                            style={styles.button}
-                            onPress={() => handleLogin()}
-                        >
-                            {loading ? (
-                                <ActivityIndicator color={"#344C74"} size={moderateScale(13, 0.4)} />
-                            ) : (
-                                <TextCustom type="Button">Iniciar Sesión</TextCustom>
-                            )}
-                        </TouchableOpacity>
+                            <Animated.View style={stylesButtonAnimation}>
+                                <Pressable
+                                    onPressIn={onPressIn}
+                                    onPressOut={onPressOut}
+                                    disabled={loading ? true : false}
+                                    style={styles.button}
+                                    onPress={() => handleLogin()}
+                                >
+                                    {loading ? (
+                                        <ActivityIndicator color={"#344C74"} size={moderateScale(13, 0.4)} />
+                                    ) : (
+                                        <TextCustom type="Button">Iniciar Sesión</TextCustom>
+                                    )}
+                                </Pressable>
+                            </Animated.View>
                         </View>
                     </View>
                 </ScrollView>
@@ -158,7 +166,7 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(14, 0.4),
     },
 
-  
+
     button: {
         height: verticalScale(48),
         backgroundColor: "#5DA9FF",
@@ -177,5 +185,5 @@ const styles = StyleSheet.create({
         borderRadius: 999,
         backgroundColor: "rgba(93, 169, 255, 0.17)",
     },
-  
+
 })

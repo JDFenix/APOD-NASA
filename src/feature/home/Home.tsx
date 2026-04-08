@@ -2,7 +2,7 @@ import ScreenWrapper from "@/src/layout/UI/ScreenWrapper";
 import TextCustom from "@/src/layout/TextCustom";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import useApod from "../apod/hook/useApod";
 import ApodCard from "../apod/components/ApodCard";
@@ -12,10 +12,16 @@ import useLogin from "../auth/hook/useLogin";
 import { useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { TabNavigatorStackParamList } from "@/src/navigate/types/TabNavigator.type";
+import useAnimationButton from "@/src/animations/useAnimationButton";
+import Animated from "react-native-reanimated";
 
 type HomeNavigationProp = BottomTabNavigationProp<TabNavigatorStackParamList, "Home">;
 
 export default function Home() {
+    const { onPressIn: onPressInLogout, onPressOut: onPressOutLogout, stylesButtonAnimation: logoutButtonAnimation, } = useAnimationButton();
+    const { onPressIn: onPressInDate, onPressOut: onPressOutDate, stylesButtonAnimation: dateButtonAnimation, } = useAnimationButton();
+
+
     const { logout } = useLogin();
     const { apod, getApod, loading, message, error } = useApod()
     const { fullName } = useAuth();
@@ -60,19 +66,23 @@ export default function Home() {
             <ScrollView style={{ marginHorizontal: scale(10) }}>
 
                 <View style={styles.container}>
-                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: scale(10), marginBottom:verticalScale(10) }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: scale(10), marginBottom: verticalScale(10) }}>
                         <View style={{ flex: 1 }}>
                             <TextCustom type="Tittle" style={{ textAlign: "left", fontSize: moderateScale(20), marginBottom: 0 }}>Bienvenido</TextCustom>
                             <TextCustom>{fullName}</TextCustom>
                         </View>
 
-                        <TouchableOpacity
-                            onPress={handleLogout}
-                            style={[styles.button, { minHeight: verticalScale(35), paddingHorizontal: scale(12), marginTop: 0,right:5 }]}
-                        >
-                            <Ionicons name="log-out-outline" size={moderateScale(19, 0.4)} color={"#07101E"} />
-                            <TextCustom type="Button">Salir</TextCustom>
-                        </TouchableOpacity>
+                        <Animated.View style={logoutButtonAnimation}>
+                            <Pressable
+                                onPressIn={onPressInLogout}
+                                onPressOut={onPressOutLogout}
+                                onPress={handleLogout}
+                                style={[styles.button, { minHeight: verticalScale(35), paddingHorizontal: scale(12), marginTop: 0, right: 5 }]}
+                            >
+                                <Ionicons name="log-out-outline" size={moderateScale(19, 0.4)} color={"#07101E"} />
+                                <TextCustom type="Button">Salir</TextCustom>
+                            </Pressable>
+                        </Animated.View>
                     </View>
 
 
@@ -84,10 +94,12 @@ export default function Home() {
 
                         <TextCustom style={styles.dateValueText} type="Tittle">{`${day}/${month}/${year}`}</TextCustom>
 
-                        <TouchableOpacity onPress={() => setShowPicker(true)} style={styles.button}>
-                            <Ionicons name="calendar" size={moderateScale(18, 0.4)} color={"#07101E"} />
-                            <TextCustom type="Button">Cambiar fecha</TextCustom>
-                        </TouchableOpacity>
+                        <Animated.View style={dateButtonAnimation}>
+                            <Pressable onPressIn={onPressInDate} onPressOut={onPressOutDate} onPress={() => setShowPicker(true)} style={styles.button}>
+                                <Ionicons name="calendar" size={moderateScale(18, 0.4)} color={"#07101E"} />
+                                <TextCustom type="Button">Cambiar fecha</TextCustom>
+                            </Pressable>
+                        </Animated.View>
                     </View>
 
 
