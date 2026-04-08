@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 import { StyleSheet, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import { scale } from "react-native-size-matters"
+import { scale, verticalScale } from "react-native-size-matters"
 
 interface IScreenWrapper {
     children: ReactNode
@@ -28,5 +28,7 @@ const styles = StyleSheet.create({
         flex: 1,
         marginHorizontal:scale(10),
         backgroundColor: "#0A1120",
+             marginBottom: verticalScale(65),
+
     },
 })
