@@ -7,24 +7,34 @@ import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import useApod from "../apod/hook/useApod";
 import ApodCard from "../apod/components/ApodCard";
 import { Ionicons } from "@expo/vector-icons";
+import useAuth from "../auth/hook/useAuth";
+import useLogin from "../auth/hook/useLogin";
+import { useNavigation } from "@react-navigation/native";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { TabNavigatorStackParamList } from "@/src/navigate/types/TabNavigator.type";
+
+type HomeNavigationProp = BottomTabNavigationProp<TabNavigatorStackParamList, "Home">;
 
 export default function Home() {
+    const { logout } = useLogin();
     const { apod, getApod, loading, message, error } = useApod()
+    const { fullName } = useAuth();
+    const nav = useNavigation<HomeNavigationProp>();
 
     const [showPicker, setShowPicker] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date(2025, 8, 18));
 
-    const [year, setYear] = useState<number>(2025);
+    const [year, setYear] = useState<number>(2004);
     const [month, setMonth] = useState<number>(9);
     const [day, setDay] = useState<number>(18);
 
     useEffect(() => {
         const fetchApod = async () => {
-            await getApod(year, month, day)
+            await getApod(year, month, day);
         }
 
         fetchApod()
-    }, [year, month, day])
+    }, [year, month, day]);
 
 
 
@@ -39,12 +49,33 @@ export default function Home() {
         setDay(date.getDate());
     }
 
+    const handleLogout = () => {
+        logout();
+        nav.navigate("Auth", { screen: "Login", params: {} });
+    }
+
 
     return (
         <ScreenWrapper>
-            <ScrollView>
+            <ScrollView style={{ marginHorizontal: scale(10) }}>
 
                 <View style={styles.container}>
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: scale(10), marginBottom:verticalScale(10) }}>
+                        <View style={{ flex: 1 }}>
+                            <TextCustom type="Tittle" style={{ textAlign: "left", fontSize: moderateScale(20), marginBottom: 0 }}>Bienvenido</TextCustom>
+                            <TextCustom>{fullName}</TextCustom>
+                        </View>
+
+                        <TouchableOpacity
+                            onPress={handleLogout}
+                            style={[styles.button, { minHeight: verticalScale(35), paddingHorizontal: scale(12), marginTop: 0,right:5 }]}
+                        >
+                            <Ionicons name="log-out-outline" size={moderateScale(19, 0.4)} color={"#07101E"} />
+                            <TextCustom type="Button">Salir</TextCustom>
+                        </TouchableOpacity>
+                    </View>
+
+
                     <View style={styles.dateHeaderCard}>
                         <View style={styles.dateRow}>
                             <Ionicons name="today-outline" size={moderateScale(18, 0.4)} color={"#A9C8FF"} />
@@ -106,7 +137,6 @@ const styles = StyleSheet.create({
         paddingVertical: verticalScale(12),
         paddingHorizontal: scale(12),
         gap: verticalScale(8),
-        marginHorizontal:scale(10),
         marginBottom: verticalScale(6),
     },
     dateRow: {

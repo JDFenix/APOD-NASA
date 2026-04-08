@@ -40,7 +40,6 @@ export default function Login() {
                 >
                     
                     <View style={styles.backgroundGlowTop} />
-                    <View style={styles.backgroundGlowBottom} />
 
                     <View style={{ marginTop: verticalScale(40), marginBottom: verticalScale(8) }}>
                         <TextCustom type="Tittle">NASA APOD</TextCustom>
@@ -112,7 +111,7 @@ export default function Login() {
                             {loading ? (
                                 <ActivityIndicator color={"#344C74"} size={moderateScale(13, 0.4)} />
                             ) : (
-                                <TextCustom type="Button">Launch Dashboard</TextCustom>
+                                <TextCustom type="Button">Iniciar Sesión</TextCustom>
                             )}
                         </TouchableOpacity>
                         </View>
@@ -178,13 +177,5 @@ const styles = StyleSheet.create({
         borderRadius: 999,
         backgroundColor: "rgba(93, 169, 255, 0.17)",
     },
-    backgroundGlowBottom: {
-        position: "absolute",
-        bottom: verticalScale(100),
-        left: scale(-45),
-        width: scale(150),
-        height: scale(150),
-        borderRadius: 999,
-        backgroundColor: "rgba(157, 118, 255, 0.11)",
-    },
+  
 })

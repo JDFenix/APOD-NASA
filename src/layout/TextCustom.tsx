@@ -1,8 +1,9 @@
+import { ReactNode } from "react";
 import { StyleSheet, Text, type TextStyle } from "react-native";
 import { moderateScale, verticalScale } from "react-native-size-matters";
 
 interface ITextCustom {
-    children: string | number;
+    children: ReactNode;
     style?: TextStyle;
     type?: "Default" | "Tittle" | "Button" | "Success" | "Error" | "Label" | "Subtittle";
 }

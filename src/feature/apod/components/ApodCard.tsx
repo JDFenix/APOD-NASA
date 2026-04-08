@@ -5,6 +5,7 @@ import { Image } from "expo-image";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { useEffect, useMemo, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 function extractYoutubeVideoId(url: string): string | null {
     const match = url.match(/(?:embed\/|v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
@@ -65,7 +66,10 @@ export default function ApodCard({ apod }: { apod: IApodResponse }) {
             </View>
 
             <TextCustom style={styles.title}>{apod.title}</TextCustom>
-            <TextCustom style={styles.date}>{apod.date}</TextCustom>
+            <View style={{ flexDirection: "row", gap: scale(10) }}>
+                <Ionicons name="calendar" size={moderateScale(19, 0.4)} color={"#9FB3D7"} />
+                <TextCustom style={styles.date}>{apod.date}</TextCustom>
+            </View>
             <TextCustom style={styles.explanation}>{apod.explanation}</TextCustom>
 
         </View>
@@ -75,7 +79,6 @@ export default function ApodCard({ apod }: { apod: IApodResponse }) {
 
 const styles = StyleSheet.create({
     card: {
-        marginHorizontal: scale(10),
         marginTop: verticalScale(8),
         padding: scale(12),
         backgroundColor: "#111D33",
@@ -125,6 +128,6 @@ const styles = StyleSheet.create({
         color: "#E1E9F7",
         lineHeight: moderateScale(22, 0.4),
         textAlign: "justify",
-        marginTop: verticalScale(2),
+        marginTop: verticalScale(10),
     },
 })

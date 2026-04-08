@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { IUser } from "@/src/feature/user/interface/IUser";
 import useAuth from "@/src/feature/auth/hook/useAuth";
 
 export default function useLogin() {
-    const { setUser } = useAuth()
+    const { setUser, clearUser } = useAuth()
 
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
@@ -16,14 +15,12 @@ export default function useLogin() {
     const login = async (): Promise<boolean> => {
         initializeRequest()
         try {
-            if (email.length === 0 || password.length === 0) {
-                setMessageUI(true, "Complete todos los campos")
+            const isValidCredentials = validateCretentials();
+            if (!isValidCredentials) {
                 return false
             }
 
-            //usuario@nasa.gov
-            //123456
-            if (email === "1" && password === "1") {
+            if (email === "usuario@nasa.gov" && password === "123456") {
                 setUser({ email: email, fullName: "Oscar Mata" })
                 return true
 
@@ -39,6 +36,33 @@ export default function useLogin() {
         } finally {
             endRequest();
         }
+    }
+
+
+    const logout = () => {
+        clearUser()
+    }
+
+
+    const validateCretentials = (): boolean => {
+        if (email.length === 0 || password.length === 0) {
+            setMessageUI(true, "Complete todos los campos")
+            return false
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const passwordRegex = /^\d{6}$/;
+
+        const isValidEmail = emailRegex.test(email.trim());
+        const isValidPassword = passwordRegex.test(password);
+
+        if (!isValidEmail || !isValidPassword) {
+            setMessageUI(true, "Credenciales con formato invalido")
+            return false
+        }
+
+        return true
+
     }
 
 
@@ -65,6 +89,6 @@ export default function useLogin() {
     }
 
 
-    return { login, loading, message, error, email, password, setPassword, setEmail }
+    return { login, loading, message, error, email, password, setPassword, setEmail, logout }
 
 }
