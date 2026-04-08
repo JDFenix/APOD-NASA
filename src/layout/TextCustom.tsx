@@ -60,7 +60,7 @@ const styleText = StyleSheet.create({
     },
     Button: {
         color: "#07101E",
-        fontSize: moderateScale(14, 0.4),
+        fontSize: moderateScale(15, 0.4),
         fontWeight: "700",
     }
 })
