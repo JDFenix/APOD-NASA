@@ -15,12 +15,14 @@ export default function useApod() {
     const getApod = async () => {
         initializeRequest()
         try {
-            const response = await api.get(`/planetary/apod`);
+            const response = await api.get(`/planetary/apod=date=2026-04-7`);
+            console.log(response)
             if (response.status === 200) {
                 setApod(response.data)
             }
 
         } catch (error) {
+            console.log(error)
             const status = (error as AxiosError).response?.status;
             setMessageUI(true, resolveApodErrorMessage(status));
         } finally {
@@ -31,15 +33,15 @@ export default function useApod() {
     const resolveApodErrorMessage = (status?: number): string => {
         switch (status) {
             case 400:
-                return "Invalid date format or date out of range.";
+                return "Fecha con formato inválido o fuera de rango.";
             case 403:
-                return "Invalid or missing API key.";
+                return "API Key inválida o no proporcionada.";
             case 429:
-                return "Request limit exceeded (rate limit).";
+                return "Límite de requests excedido (rate limit).";
             case 500:
-                return "NASA server internal error.";
+                return "Error interno del servidor de NASA.";
             default:
-                return "Unexpected error while loading APOD data.";
+                return "Error inesperado al cargar los datos de APOD.";
         }
     }
 
@@ -65,6 +67,6 @@ export default function useApod() {
     }
 
 
-    return { getApod, loading, apod, message }
+    return { getApod, loading, apod, message, error }
 
 }

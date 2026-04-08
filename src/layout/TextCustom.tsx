@@ -1,10 +1,10 @@
 import { StyleSheet, Text, type TextStyle } from "react-native";
-import { moderateScale } from "react-native-size-matters";
+import { moderateScale, verticalScale } from "react-native-size-matters";
 
 interface ITextCustom {
     children: string | number;
-    style?: TextStyle
-    type?: "Default" | "Tittle"
+    style?: TextStyle;
+    type?: "Default" | "Tittle" | "Button" | "Success" | "Error" | "Label" | "Subtittle";
 }
 
 export default function TextCustom({ children, style, type = "Default" }: ITextCustom) {
@@ -20,15 +20,47 @@ export default function TextCustom({ children, style, type = "Default" }: ITextC
 
 const styleText = StyleSheet.create({
     Tittle: {
-        color: "#FFFFFF",
+        color: "#8FB8FF",
         textAlign: "center",
-        fontSize: moderateScale(23, 0.5),
-        fontWeight: "normal"
+        fontSize: moderateScale(25, 0.5),
+        fontWeight: "900",
+        marginBottom: verticalScale(10),
+        marginTop: verticalScale(10)
+    },
+
+    Subtittle: {
+        color: "#b5b5b6",
+        textAlign: "center",
+        fontSize: moderateScale(13, 0.5),
+        fontWeight: "500",
+        marginTop: verticalScale(8)
+    },
+
+    Label: {
+        marginBottom: verticalScale(7),
+        color: "#DDE6F6",
+        fontSize: moderateScale(13, 0.4),
+        fontWeight: "600",
     },
 
     Default: {
         color: "#FFFFFF",
         fontSize: moderateScale(15, 0.5),
         fontWeight: "normal"
+    },
+    Error: {
+        color: "#f22a2a",
+        fontSize: moderateScale(15, 0.5),
+        fontWeight: "normal"
+    },
+    Success: {
+        color: "#72e738",
+        fontSize: moderateScale(15, 0.5),
+        fontWeight: "normal"
+    },
+    Button: {
+        color: "#07101E",
+        fontSize: moderateScale(14, 0.4),
+        fontWeight: "700",
     }
 })
