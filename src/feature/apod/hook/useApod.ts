@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { IApodResponse } from "../interface/IApodResponse";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { api } from "@/src/service/ApiClient";
 
 export default function useApod() {
@@ -12,17 +12,15 @@ export default function useApod() {
 
 
 
-    const getApod = async () => {
+    const getApod = async (age: number, month: number, day: number) => {
         initializeRequest()
         try {
-            const response = await api.get(`/planetary/apod=date=2026-04-7`);
-            console.log(response)
+            const response = await api.get(`/planetary/apod?date=${age}-${month}-${day}`);
             if (response.status === 200) {
                 setApod(response.data)
             }
 
         } catch (error) {
-            console.log(error)
             const status = (error as AxiosError).response?.status;
             setMessageUI(true, resolveApodErrorMessage(status));
         } finally {

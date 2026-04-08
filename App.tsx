@@ -1,13 +1,14 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 import RootLayout from './src/navigate/RootLayout';
+import AuthProvider from './src/feature/auth/context/AuthContext';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <RootLayout />
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <RootLayout />
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
 

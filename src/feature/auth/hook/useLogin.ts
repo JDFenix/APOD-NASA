@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { AxiosError } from "axios";
-import { api } from "@/src/service/ApiClient";
+import { IUser } from "@/src/feature/user/interface/IUser";
+import useAuth from "@/src/feature/auth/hook/useAuth";
 
 export default function useLogin() {
-
+    const { setUser } = useAuth()
 
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
@@ -11,7 +11,6 @@ export default function useLogin() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [message, setMessage] = useState<string | null>(null)
-
 
 
     const login = async (): Promise<boolean> => {
@@ -22,16 +21,18 @@ export default function useLogin() {
                 return false
             }
 
-            if (email === "usuario@nasa.com" && password === "123456") {
-                return true;
+            //usuario@nasa.gov
+            //123456
+            if (email === "1" && password === "1") {
+                setUser({ email: email, fullName: "Oscar Mata" })
+                return true
 
             } else {
                 setMessageUI(true, "Credenciales invalidas")
                 return false
             }
 
-        } catch (error) {
-            const status = (error as AxiosError).response?.status;
+        } catch {
             setMessageUI(true, "Error interno del servidor");
             return false
 

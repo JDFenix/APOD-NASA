@@ -1,9 +1,11 @@
 import TextCustom from "@/src/layout/TextCustom";
 import ScreenWrapper from "@/src/layout/UI/ScreenWrapper";
 import { TabNavigatorStackParamList } from "@/src/navigate/types/TabNavigator.type";
+import { Ionicons } from "@expo/vector-icons";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
-import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import useLogin from "../hook/useLogin";
 
@@ -12,6 +14,8 @@ type LoginNavigationProp = BottomTabNavigationProp<TabNavigatorStackParamList, "
 export default function Login() {
 
     const { setEmail, setPassword, email, password, login, loading, message, error } = useLogin()
+    const [showPassword, setShowPassword] = useState(false);
+
     const nav = useNavigation<LoginNavigationProp>()
 
     const handleLogin = async () => {
@@ -24,22 +28,33 @@ export default function Login() {
 
     return (
         <ScreenWrapper>
-            <View style={styles.backgroundGlowTop} />
-            <View style={styles.backgroundGlowBottom} />
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={verticalScale(25)}
+            >
+                <ScrollView
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ flexGrow: 1, paddingBottom: verticalScale(20) }}
+                >
+                    
+                    <View style={styles.backgroundGlowTop} />
+                    <View style={styles.backgroundGlowBottom} />
 
-            <View style={{ marginTop: verticalScale(40), marginBottom: verticalScale(8) }}>
-                <TextCustom type="Tittle">NASA APOD</TextCustom>
-            </View>
-
-
-            <View style={styles.contentCenter}>
-                <View style={styles.container}>
-
-
-                    <View style={{ marginBottom: verticalScale(30) }}>
-                        <TextCustom type="Tittle">Iniciar Sesión</TextCustom>
-                        <TextCustom type="Subtittle">Bienvenido a APOD, tu ventana diaria al universo. Inicia sesión para descubrir la imagen astronómica de hoy.</TextCustom>
+                    <View style={{ marginTop: verticalScale(40), marginBottom: verticalScale(8) }}>
+                        <TextCustom type="Tittle">NASA APOD</TextCustom>
                     </View>
+
+
+                    <View style={styles.contentCenter}>
+                        <View style={styles.container}>
+
+
+                        <View style={{ marginBottom: verticalScale(30) }}>
+                            <TextCustom type="Tittle">Iniciar Sesión</TextCustom>
+                            <TextCustom type="Subtittle">Bienvenido a APOD, tu ventana diaria al universo. Inicia sesión para descubrir la imagen astronómica de hoy.</TextCustom>
+                        </View>
 
                     <View style={styles.inputBlock}>
                         <TextCustom type="Label">Correo:</TextCustom>
@@ -50,43 +65,60 @@ export default function Login() {
                             placeholderTextColor="#7E8CA8"
                             keyboardType="email-address"
                             autoCapitalize="none"
+                            returnKeyType="next"
                             style={styles.input}
                         />
                     </View>
 
                     <View style={styles.inputBlock}>
                         <TextCustom type="Label">Contraseña:</TextCustom>
-                        <TextInput
-                            onChangeText={(txt) => setPassword(txt)}
-                            value={password}
-                            placeholder="**********"
-                            placeholderTextColor="#7E8CA8"
-                            secureTextEntry
-                            style={styles.input}
-                        />
+                        <View style={{position: "relative"}}>
+                            <TextInput
+                                onChangeText={(txt) => setPassword(txt)}
+                                value={password}
+                                placeholder="**********"
+                                placeholderTextColor="#7E8CA8"
+                                secureTextEntry={!showPassword}
+                                returnKeyType="done"
+                                onSubmitEditing={handleLogin}
+                                style={styles.input}
+                            />
+                            <TouchableOpacity
+                                onPress={() => setShowPassword((show) => !show)}
+                                style={{ position: "absolute", right: scale(12), top: verticalScale(11), alignItems: "center", marginTop: verticalScale(5) }}
+                            >
+                                <Ionicons
+                                    name={showPassword ? "eye-off-outline" : "eye-outline"}
+                                    size={moderateScale(19, 0.4)}
+                                    color="#EEF3FF"
+                                />
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
 
-                    <View style={{ minHeight: verticalScale(30) }}>
-                        {message && (
-                            <TextCustom style={{ textAlign: "center" }} type={error ? "Error" : "Success"} >{message ?? ""}</TextCustom>
-                        )}
+                        <View style={{ minHeight: verticalScale(30) }}>
+                            {message && (
+                                <TextCustom style={{ textAlign: "center" }} type={error ? "Error" : "Success"} >{message ?? ""}</TextCustom>
+                            )}
+                        </View>
+
+
+                        <TouchableOpacity
+                            disabled={loading ? true : false}
+                            style={styles.button}
+                            onPress={() => handleLogin()}
+                        >
+                            {loading ? (
+                                <ActivityIndicator color={"#344C74"} size={moderateScale(13, 0.4)} />
+                            ) : (
+                                <TextCustom type="Button">Launch Dashboard</TextCustom>
+                            )}
+                        </TouchableOpacity>
+                        </View>
                     </View>
-
-
-                    <TouchableOpacity
-                        disabled={loading ? true : false}
-                        style={styles.button}
-                        onPress={() => handleLogin()}
-                    >
-                        {loading ? (
-                            <ActivityIndicator color={"#344C74"} size={moderateScale(13, 0.4)} />
-                        ) : (
-                            <TextCustom type="Button">Launch Dashboard</TextCustom>
-                        )}
-                    </TouchableOpacity>
-                </View>
-            </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
 
         </ScreenWrapper>
     )
@@ -126,6 +158,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: scale(12),
         fontSize: moderateScale(14, 0.4),
     },
+
+  
     button: {
         height: verticalScale(48),
         backgroundColor: "#5DA9FF",
